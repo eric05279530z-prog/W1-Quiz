@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>W1 開機·Web 新手村 互動測驗 - 沈昱呈</title>
+    <style>
+        :root {
+            --bg-color: #0f1020;
+            --card-bg: rgba(25, 26, 48, 0.9);
+            --neon-pink: #ff2a6d;
+            --neon-blue: #05d9e8;
+            --neon-purple: #b967ff;
+            --text-main: #f1f1f1;
+            --text-sub: #a0a0c0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(255, 42, 109, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(5, 217, 232, 0.2) 0%, transparent 40%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(5, 217, 232, 0.4);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(5, 217, 232, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-main);
+            font-size: 2em;
+            text-shadow: 0 0 10px rgba(255, 42, 109, 0.6);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--neon-blue);
+            font-size: 1em;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .question-card.correct-card {
+            border-color: #56efb4;
+            background: rgba(86, 239, 180, 0.05);
+        }
+
+        .question-card.wrong-card {
+            border-color: #ff6b81;
+            background: rgba(255, 107, 129, 0.05);
+        }
+
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #ffffff;
+            line-height: 1.5;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
+        }
+
+        .options label:hover {
+            background: rgba(5, 217, 232, 0.1);
+            border-color: rgba(5, 217, 232, 0.4);
+            transform: translateX(4px);
+        }
+
+        .options input[type="radio"] {
+            margin-right: 12px;
+            accent-color: var(--neon-pink);
+            transform: scale(1.2);
+        }
+
+        .explanation {
+            font-size: 0.9em;
+            color: var(--text-sub);
+            margin-top: 12px;
+            border-left: 3px solid var(--neon-blue);
+            padding-left: 10px;
+            background: rgba(5, 217, 232, 0.05);
+            padding: 8px 10px;
+            border-radius: 0 6px 6px 0;
+            display: none;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(255, 42, 109, 0.4);
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 0 30px rgba(255, 42, 109, 0.8);
+            transform: translateY(-2px);
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .correct-result {
+            color: #56efb4;
+            background: rgba(86, 239, 180, 0.1);
+            border: 1px solid #56efb4;
+        }
+
+        .incorrect-result {
+            color: #ff6b81;
+            background: rgba(255, 107, 129, 0.1);
+            border: 1px solid #ff6b81;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>W1 開機·Web 新手村</h1>
+    <div class="subtitle">互動測驗挑戰區 ｜ 學生：沈昱呈 (s1151826)</div>
+    
+    <form id="quizForm">
+        <!-- 第 1 題 -->
+        <div class="question-card" id="card1">
+            <div class="question-title" id="title1">1. 在網頁設計中，幫標題設定粉紅色、背景加上漸層，屬於「網頁三兄弟」中的哪一層？</div>
+            <div class="options">
+                <label><input type="radio" name="q1" value="A"> (A) HTML (骨架)</label>
+                <label><input type="radio" name="q1" value="B"> (B) CSS (衣服)</label>
+                <label><input type="radio" name="q1" value="C"> (C) JavaScript (動作)</label>
+                <label><input type="radio" name="q1" value="D"> (D) Meta (設定)</label>
+            </div>
+            <div class="explanation" id="exp1">解析：CSS 負責外觀與樣式（衣服），決定長相。</div>
+        </div>
+
+        <!-- 第 2 題 -->
+        <div class="question-card" id="card2">
+            <div class="question-title" id="title2">2. 當你在瀏覽器網址列輸入網址並按下 Enter 時，遠端伺服器回傳給你的本質是什麼？</div>
+            <div class="options">
+                <label><input type="radio" name="q2" value="A"> (A) 一個寫滿標籤的純文字檔</label>
+                <label><input type="radio" name="q2" value="B"> (B) 一個已經編譯好的執行檔 (.exe)</label>
+                <label><input type="radio" name="q2" value="C"> (C) 一張壓縮過的圖片檔</label>
+                <label><input type="radio" name="q2" value="D"> (D) 一個影片串流檔</label>
+            </div>
+            <div class="explanation" id="exp2">解析：伺服器回傳給瀏覽器的其實只是一份寫滿標籤的純文字檔。</div>
+        </div>
+
+        <!-- 第 3 題 -->
+        <div class="question-card" id="card3">
+            <div class="question-title" id="title3">3. 在 VS Code 中安裝哪一個外掛後，只要按下存檔，瀏覽器就會自動重新整理畫面？</div>
+            <div class="options">
+                <label><input type="radio" name="q3" value="A"> (A) Chinese (Traditional)</label>
+                <label><input type="radio" name="q3" value="B"> (B) GitHub Copilot</label>
+                <label><input type="radio" name="q3" value="C"> (C) Live Server</label>
+                <label><input type="radio" name="q3" value="D"> (D) Prettier</label>
+            </div>
+            <div class="explanation" id="exp3">解析：Live Server 是 VS Code 的外掛，存檔即自動重新整理。</div>
+        </div>
+
+        <!-- 第 4 題 -->
+        <div class="question-card" id="card4">
+            <div class="question-title" id="title4">4. 在 VS Code 的空白檔案中，輸入哪一個符號再按 Tab，能瞬間長出 HTML 基本骨架？</div>
+            <div class="options">
+                <label><input type="radio" name="q4" value="A"> (A) #</label>
+                <label><input type="radio" name="q4" value="B"> (B) !</label>
+                <label><input type="radio" name="q4" value="C"> (C) ?</label>
+                <label><input type="radio" name="q4" value="D"> (D) $</label>
+            </div>
+            <div class="explanation" id="exp4">解析：輸入一個驚嘆號 `!` 再按 Tab 即可利用 Emmet 魔法自動產生骨架。</div>
+        </div>
+
+        <!-- 第 5 題 -->
+        <div class="question-card" id="card5">
+            <div class="question-title" id="title5">5. 在 HTML 的 &lt;head&gt; 區塊中，哪一行是用來指定文字編碼以避免中文變成亂碼？</div>
+            <div class="options">
+                <label><input type="radio" name="q5" value="A"> (A) &lt;meta name="viewport" content="..."&gt;</label>
+                <label><input type="radio" name="q5" value="B"> (B) &lt;meta charset="UTF-8"&gt;</label>
+                <label><input type="radio" name="q5" value="C"> (C) &lt;html lang="zh-Hant"&gt;</label>
+                <label><input type="radio" name="q5" value="D"> (D) &lt;title&gt;Document&lt;/title&gt;</label>
+            </div>
+            <div class="explanation" id="exp5">解析：`charset="UTF-8"` 指定了能夠表示全世界文字的編碼方式。</div>
+        </div>
+
+        <!-- 第 6 題 -->
+        <div class="question-card" id="card6">
+            <div class="question-title" id="title6">6. 關於 HTML 的名詞定義，下列何者正確？</div>
+            <div class="options">
+                <label><input type="radio" name="q6" value="A"> (A) 只有開始標籤，沒有結束標籤的叫做元素</label>
+                <label><input type="radio" name="q6" value="B"> (B) 寫在開始標籤裡的額外設定（如 href="url"）叫做屬性</label>
+                <label><input type="radio" name="q6" value="C"> (C) 用小括號把內容夾起來叫做標籤</label>
+                <label><input type="radio" name="q6" value="D"> (D) &lt;br&gt; 具有標準的開始與結束標籤</label>
+            </div>
+            <div class="explanation" id="exp6">解析：屬性是寫在開始標籤裡的額外設定，格式為名字=`"值"`。</div>
+        </div>
+
+        <!-- 第 7 題 -->
+        <div class="question-card" id="card7">
+            <div class="question-title" id="title7">7. HTML 巢狀結構（俄羅斯娃娃一層包一層）的基本關閉原則是什麼？</div>
+            <div class="options">
+                <label><input type="radio" name="q7" value="A"> (A) 先開的先關</label>
+                <label><input type="radio" name="q7" value="B"> (B) 後開的先關</label>
+                <label><input type="radio" name="q7" value="C"> (C) 隨便先關哪一個都可以</label>
+                <label><input type="radio" name="q7" value="D"> (D) 不用關閉標籤</label>
+            </div>
+            <div class="explanation" id="exp7">解析：巢狀結構的規則是後開的先關。</div>
+        </div>
+
+        <!-- 第 8 題 -->
+        <div class="question-card" id="card8">
+            <div class="question-title" id="title8">8. 關於網頁標題標籤 &lt;h1&gt; 至 &lt;h6&gt; 的使用原則，下列何者正確？</div>
+            <div class="options">
+                <label><input type="radio" name="q8" value="A"> (A) 為了讓字體變小，可以直接把 &lt;h2&gt; 改成 &lt;h5&gt;</label>
+                <label><input type="radio" name="q8" value="B"> (B) 一頁通常只放一個 &lt;h1&gt;，如同書本只有一個書名</label>
+                <label><input type="radio" name="q8" value="C"> (C) 數字越大代表標題越重要、字體越大</label>
+                <label><input type="radio" name="q8" value="D"> (D) 總共有 &lt;h1&gt; 到 &lt;h8&gt; 八種尺寸</label>
+            </div>
+            <div class="explanation" id="exp8">解析：選擇標題是看重要程度而非字體大小，h1 像書名一頁通常只放一個。</div>
+        </div>
+
+        <!-- 第 9 題 -->
+        <div class="question-card" id="card9">
+            <div class="question-title" id="title9">9. 當你在程式碼的段落中按下多次 Enter 換行或連續打多個空白時，畫面上會呈現什麼結果？</div>
+            <div class="options">
+                <label><input type="radio" name="q9" value="A"> (A) 畫面會完全呈現一樣多的空白與換行</label>
+                <label><input type="radio" name="q9" value="B"> (B) 程式碼裡的換行與連續空白會被壓成一個空白（空白摺疊）</label>
+                <label><input type="radio" name="q9" value="C"> (C) 網頁會直接報錯崩潰</label>
+                <label><input type="radio" name="q9" value="D"> (D) 自動變成粗體字</label>
+            </div>
+            <div class="explanation" id="exp9">解析：瀏覽器具有「空白摺疊」規則，連續空白或換行會被壓成一個空白。</div>
+        </div>
+
+        <!-- 第 10 題 -->
+        <div class="question-card" id="card10">
+            <div class="question-title" id="title10">10. 如果要寫一個超連結，點擊後會在新分頁開啟外部網站，下列語法何者正確？</div>
+            <div class="options">
+                <label><input type="radio" name="q10" value="A"> (A) &lt;a href="網址" target="_blank"&gt;文字&lt;/a&gt;</label>
+                <label><input type="radio" name="q10" value="B"> (B) &lt;img src="網址" target="_blank"&gt;</label>
+                <label><input type="radio" name="q10" value="C"> (C) &lt;a link="網址"&gt;文字&lt;/a&gt;</label>
+                <label><input type="radio" name="q10" value="D"> (D) &lt;p target="_blank"&gt;文字&lt;/p&gt;</label>
+            </div>
+            <div class="explanation" id="exp10">解析：超連結使用 `&lt;a&gt;` 標籤配合 `href` 指定目的地，並加上 `target="_blank"`。</div>
+        </div>
+
+        <button type="button" class="submit-btn" onclick="submitQuiz()">⚡ 立即交卷看成績與詳解</button>
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    const originalTitles = {
+        1: "1. 在網頁設計中，幫標題設定粉紅色、背景加上漸層，屬於「網頁三兄弟」中的哪一層？",
+        2: "2. 當你在瀏覽器網址列輸入網址並按下 Enter 時，遠端伺服器回傳給你的本質是什麼？",
+        3: "3. 在 VS Code 中安裝哪一個外掛後，只要按下存檔，瀏覽器就會自動重新整理畫面？",
+        4: "4. 在 VS Code 的空白檔案中，輸入哪一個符號再按 Tab，能瞬間長出 HTML 基本骨架？",
+        5: "5. 在 HTML 的 &lt;head&gt; 區塊中，哪一行是用來指定文字編碼以避免中文變成亂碼？",
+        6: "6. 關於 HTML 的名詞定義，下列何者正確？",
+        7: "7. HTML 巢狀結構（俄羅斯娃娃一層包一層）的基本關閉原則是什麼？",
+        8: "8. 關於網頁標題標籤 &lt;h1&gt; 至 &lt;h6&gt; 的使用原則，下列何者正確？",
+        9: "9. 當你在程式碼的段落中按下多次 Enter 換行或連續打多個空白時，畫面上會呈現什麼結果？",
+        10: "10. 如果要寫一個超連結，點擊後會在新分頁開啟外部網站，下列語法何者正確？"
+    };
+
+    function submitQuiz() {
+        const answers = { q1: 'B', q2: 'A', q3: 'C', q4: 'B', q5: 'B', q6: 'B', q7: 'B', q8: 'B', q9: 'B', q10: 'A' };
+        let score = 0;
+
+        for (let i = 1; i <= 10; i++) {
+            let qKey = 'q' + i;
+            let userAns = document.querySelector(`input[name="${qKey}"]:checked`);
+            let card = document.getElementById('card' + i);
+            let title = document.getElementById('title' + i);
+            let exp = document.getElementById('exp' + i);
+            
+            exp.style.display = 'block';
+            card.classList.remove('correct-card', 'wrong-card');
+
+            if (userAns && userAns.value === answers[qKey]) {
+                score += 10;
+                card.classList.add('correct-card');
+                title.innerHTML = `✅ ${originalTitles[i]} <span style="color:#56efb4; font-size:0.9em;">(答對 +10分)</span>`;
+            } else {
+                card.classList.add('wrong-card');
+                let userChoice = userAns ? userAns.value : '未選';
+                title.innerHTML = `❌ ${originalTitles[i]} <span style="color:#ff6b81; font-size:0.9em;">(你的答案: ${userChoice} ｜ 正確答案: ${answers[qKey]})</span>`;
+            }
+        }
+
+        let resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        
+        if (score === 100) {
+            resultDiv.className = 'correct-result';
+            resultDiv.innerHTML = `🎉 太神啦！滿分 100 分！<br><span style="font-size:0.8em;"></span>`;
+        } else {
+            resultDiv.className = 'incorrect-result';
+            resultDiv.innerHTML = `🎯 測驗結算：${score} 分<br><span style="font-size:0.75em; color:var(--text-sub);">請參考上方帶有 ✅ 與 ❌ 符號的題目與下方詳解複習錯處！</span>`;
+        }
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
